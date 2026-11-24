@@ -758,14 +758,28 @@ h3::before{content:"";width:6px;height:20px;background:var(--dc,var(--blue));bor
 .tel{display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:12px;background:var(--red);color:#fff;text-decoration:none;font-weight:700;font-size:17px;margin:6px 0}
 .tel.alt{background:var(--teal)}
 .rain{border-left-color:#5b7f99;background:#eef4f8}
-.mapbox{border-radius:14px;overflow:hidden;border:1.5px solid var(--line);margin:10px 0 4px;position:relative}
-#map{height:330px;background:#e8eef2}
-.mapst{list-style:none;margin:0;padding:0}
-.mapst li button{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;min-height:52px;padding:6px 12px;border:0;border-top:1px solid var(--line);background:#fff;font:inherit;color:var(--ink);text-align:left;cursor:pointer}
-.mapst .num,.pin{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--dc);color:#fff;font:700 16px "Barlow Condensed",sans-serif;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
-.pin.sub{width:22px;height:22px;font-size:12px;background:#fff;color:var(--dc);border-color:var(--dc)}
-.mapst .nm{font-weight:700;font-size:16px;line-height:1.35}.mapst .ad{display:block;font-size:12.5px;color:var(--sub);font-weight:400}
-.mapst .go{font-size:13px;color:var(--teal);font-weight:700}
+.mapbox{border-radius:14px;overflow:hidden;border:1.5px solid var(--line);margin:10px 0 4px;position:relative;height:560px;background:#e8eef2}
+.mapbox #map{position:absolute;inset:0}
+.mapbox.full{position:fixed;inset:0;z-index:60;border-radius:0;border:0;margin:0;height:auto}
+.mbtn{position:absolute;z-index:500;border:0;background:#fff;color:var(--ink);font:700 14px "Noto Sans JP",sans-serif;box-shadow:0 1px 6px rgba(0,0,0,.3);cursor:pointer}
+.mfull{top:10px;right:10px;height:40px;padding:0 14px;border-radius:20px}
+.mall{top:58px;right:10px;height:40px;padding:0 14px;border-radius:20px}
+.mclose{top:calc(10px + env(safe-area-inset-top));left:10px;width:44px;height:44px;border-radius:50%;font-size:22px;display:none}
+.mapbox.full .mclose{display:block}.mapbox.full .mfull{display:none}
+.mapbox.full .mall{top:calc(10px + env(safe-area-inset-top))}
+.mprev,.mnext{top:42%;width:40px;height:40px;border-radius:50%;font-size:24px;line-height:1}
+.mprev{left:6px}.mnext{right:6px}
+.mcards{position:absolute;z-index:450;left:0;right:0;bottom:10px;display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 30px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.mapbox.full .mcards{bottom:calc(14px + env(safe-area-inset-bottom))}
+.mcards::-webkit-scrollbar{display:none}
+.mcard{flex:0 0 calc(100% - 60px);scroll-snap-align:center;background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.25);padding:10px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;align-items:start}
+.mth{width:72px;height:72px;border-radius:12px;overflow:hidden;background:var(--dc);display:grid;place-items:center;color:#fff;font:700 30px "Barlow Condensed",sans-serif}
+.mth img{width:100%;height:100%;object-fit:cover}
+.mtx p{margin:0}.mnm{font-weight:700;font-size:16px;line-height:1.35}
+.mno{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:12px;background:var(--dc);color:#fff;font:700 14px "Barlow Condensed",sans-serif;margin-right:6px;vertical-align:1px}
+.mt{font-size:13px;color:var(--dc);font-weight:700}.md{font-size:13.5px;color:var(--sub);line-height:1.5;margin-top:2px!important;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mtx .btn{margin-top:6px;min-height:36px;font-size:13.5px}
+.pin{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--dc);color:#fff;font:700 16px "Barlow Condensed",sans-serif;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);transition:transform .2s}.pin.on{transform:scale(1.35);background:var(--red)!important;color:#fff!important;border-color:#fff!important}
 .leaflet-popup-content{font:15px/1.5 "Noto Sans JP",sans-serif;margin:10px 12px}
 .leaflet-popup-content a.btn{color:var(--teal)}
 .note{font-size:13.5px;color:var(--sub);margin-top:12px}
@@ -823,17 +837,17 @@ const COL=['#1f6fa8','#7a4a9e'];
 // 地図（じいじのChatGPTの地図データをもとに、座標と合流場所などを足したもの）
 const MAPDAYS=[
 {date:'2026-12-06',title:'1日目',locations:[
- {q:'日産レンタカー 米原',name:'米原駅・日産レンタカー',address:'滋賀県米原市米原',lat:35.31477,lon:136.28984,t:'08:21'},
- {q:'彦根城',name:'彦根城',address:'滋賀県彦根市金亀町1-1',lat:35.27652,lon:136.25184,t:'09:30'},
- {q:'近江八幡駅',name:'JR近江八幡駅 北口（神谷さんご夫婦と合流）',address:'滋賀県近江八幡市鷹飼町',lat:35.12314,lon:136.10209,t:'11:30'},
- {q:'八幡堀',name:'近江八幡・八幡堀',address:'滋賀県近江八幡市宮内町',lat:35.13970,lon:136.08996,t:'11:40'},
- {q:'ラ コリーナ近江八幡',name:'ラ コリーナ近江八幡',address:'滋賀県近江八幡市北之庄町615-1',lat:35.14890,lon:136.09138,t:'15:00'},
- {q:'琵琶湖グランドホテル',name:'琵琶湖グランドホテル・京近江（雄琴温泉）',address:'滋賀県大津市雄琴6-5-1',lat:35.08776,lon:135.89738,t:'17:15'}]},
+ {q:'日産レンタカー 米原',name:'米原駅・日産レンタカー',address:'滋賀県米原市米原',lat:35.31477,lon:136.28984,t:'08:21',ph:'maibara',tx:'日産レンタカーでセレナを借りる（無人のセルフライドゴー）。自分のETCカードを挿して出発。'},
+ {q:'彦根城',name:'彦根城',ph:'hikone',tx:'国宝の天守。8:30〜17:00、大人1,000円ほど。天守の階段はとても急。',address:'滋賀県彦根市金亀町1-1',lat:35.27652,lon:136.25184,t:'09:30'},
+ {q:'近江八幡駅',name:'JR近江八幡駅 北口（神谷さんご夫婦と合流）',ph:'',tx:'11:30前に神谷さんご夫婦が北口で待っている。ロータリーで乗ってもらう。',address:'滋賀県近江八幡市鷹飼町',lat:35.12314,lon:136.10209,t:'11:30'},
+ {q:'八幡堀',name:'近江八幡・八幡堀',ph:'hbori',tx:'お昼ごはんのあと、ガイドさんと八幡堀と町並みを歩く（12:45〜14:45）。',address:'滋賀県近江八幡市宮内町',lat:35.13970,lon:136.08996,t:'11:40'},
+ {q:'ラ コリーナ近江八幡',name:'ラ コリーナ近江八幡',ph:'lacollina',tx:'たねや・クラブハリエのお店。焼きたてバームクーヘンと買い物。9:00〜18:00。',address:'滋賀県近江八幡市北之庄町615-1',lat:35.14890,lon:136.09138,t:'15:00'},
+ {q:'琵琶湖グランドホテル',name:'琵琶湖グランドホテル・京近江（雄琴温泉）',ph:'',tx:'琵琶湖が見える展望露天風呂の温泉ホテル。電話 077-579-2111。',address:'滋賀県大津市雄琴6-5-1',lat:35.08776,lon:135.89738,t:'17:15'}]},
 {date:'2026-12-07',title:'2日目',locations:[
- {q:'琵琶湖グランドホテル',name:'琵琶湖グランドホテル・京近江（雄琴温泉）',address:'滋賀県大津市雄琴6-5-1',lat:35.08776,lon:135.89738,t:'08:45'},
- {q:'奥比叡ドライブウェイ 仰木料金所',name:'奥比叡ドライブウェイ 仰木料金所',address:'滋賀県大津市仰木2丁目',lat:35.10717,lon:135.87050,t:'09:00',sub:1},
- {q:'延暦寺 根本中堂',name:'比叡山延暦寺・東塔',address:'滋賀県大津市坂本本町4220',lat:35.07050,lon:135.84096,t:'09:15'},
- {q:'日産レンタカー 米原',name:'米原駅・日産レンタカー',address:'滋賀県米原市米原',lat:35.31477,lon:136.28984,t:'16:00'}]}
+ {q:'琵琶湖グランドホテル',name:'琵琶湖グランドホテル・京近江（雄琴温泉）',ph:'',tx:'琵琶湖が見える展望露天風呂の温泉ホテル。電話 077-579-2111。',address:'滋賀県大津市雄琴6-5-1',lat:35.08776,lon:135.89738,t:'08:45'},
+ {q:'奥比叡ドライブウェイ 仰木料金所',name:'奥比叡ドライブウェイ 仰木料金所',ph:'',tx:'12月は朝9:00に開く。ここから比叡山の上まで山道。',address:'滋賀県大津市仰木2丁目',lat:35.10717,lon:135.87050,t:'09:00',sub:1},
+ {q:'延暦寺 根本中堂',name:'比叡山延暦寺・東塔',ph:'konpon',tx:'根本中堂・大講堂・文殊楼・国宝殿。9:00〜16:00、巡拝料1,000円。',address:'滋賀県大津市坂本本町4220',lat:35.07050,lon:135.84096,t:'09:15'},
+ {q:'日産レンタカー 米原',name:'米原駅・日産レンタカー',address:'滋賀県米原市米原',lat:35.31477,lon:136.28984,t:'16:00',ph:'maibara',tx:'ガソリン満タンで車を返す。ETCカードを抜き忘れない。17:34のこだまで帰る。'}]}
 ];
 const DAYS=[
 {n:1,date:'12/6',w:'日',title:'彦根城と近江八幡、夜は雄琴温泉',lead:'米原駅でレンタカー（セレナ）を借りて、琵琶湖の東側を南へ。近江八幡駅で神谷さんご夫婦と合流。夕方に琵琶湖大橋を渡って、おごと温泉の琵琶湖グランドホテルへ。',stay:'琵琶湖グランドホテル・京近江（おごと温泉）',
@@ -938,7 +952,10 @@ function vDay(n){
  const d=DAYS[n-1];
  return `<div class="hero"><svg viewBox="0 0 400 120" preserveAspectRatio="xMaxYMax slice" aria-hidden="true">${ART[n-1]}</svg><div class="tx"><div class="no">${n}日目　${d.date}（${d.w}）</div><h2>${d.title}</h2></div></div>
  <div class="wx" data-date="2026-12-0${n===1?6:7}" data-city="${n===1?'hk':'hi'}"></div><p class="lead">${F(d.lead)}</p>
- <h3>この日の地図</h3><div class="mapbox"><div id="map" aria-label="${n}日目の地図"></div><ol class="mapst">${MAPDAYS[n-1].locations.map((l,i)=>`<li><button data-mi="${i}"><span class="num"${l.sub?' style="background:#fff;color:var(--dc);border-color:var(--dc)"':''}>${l.sub?'・':mapNo(n,i)}</span><span class="nm">${l.name}<span class="ad">${l.t}ごろ・${l.address}</span></span><span class="go">地図で見る</span></button></li>`).join('')}</ol></div>
+ <h3>この日の地図</h3><div class="mapbox" id="mapbox"><div id="map" aria-label="${n}日目の地図"></div>
+ <button class="mbtn mclose" id="mClose" aria-label="地図を閉じる">×</button><button class="mbtn mfull" id="mFull">大きく見る</button><button class="mbtn mall" id="mAll">全体</button>
+ <div class="mcards" id="mcards">${MAPDAYS[n-1].locations.map((l,i)=>{const b=l.ph&&PHOTOS[l.ph];const no=l.sub?'・':mapNo(n,i);return `<div class="mcard" data-ci="${i}"><div class="mth">${b?`<img src="${b.src}" alt="">`:`<span>${no}</span>`}</div><div class="mtx"><p class="mnm"><b class="mno">${no}</b>${l.name}</p><p class="mt">${l.t}ごろ</p><p class="md">${l.tx||''}</p><a class="btn" href="${D('',l.q)}" target="_blank" rel="noopener">ここへ車で行く（マップ）</a></div></div>`}).join('')}</div>
+ <button class="mbtn mprev" id="mPrev" aria-label="前の場所">‹</button><button class="mbtn mnext" id="mNext" aria-label="次の場所">›</button></div>
  <a class="route" href="${routeUrl(d.route)}" target="_blank" rel="noopener">この日のルートを「マップ」で開く（ナビ）</a>
  <div class="split"><div>
  <ol class="tl">${d.plan.map((p,i)=>`<li><time>${p[0]}</time><div><div class="t">${p[1]}</div>${p[2]?`<div class="d">${F(p[2])}</div>`:''}${p[4]?phBox(p[4],p[1]):''}${p[3]?`<div class="btns">${p[3]}</div>`:''}</div></li>`).join('')}</ol></div>
@@ -982,32 +999,39 @@ function wxFill(){document.querySelectorAll('.wx[data-date]').forEach(el=>{const
  else el.innerHTML=`<div class="wi">🌡️</div><div class="wt">${p.nm}の天気（例年 ${p.norm}くらい）</div><div class="ws">予報は約2週間前から、ここに出ます</div>`})}
 
 const mapNo=(n,i)=>MAPDAYS[n-1].locations.slice(0,i+1).filter(l=>!l.sub).length;
-let lmap=null,lmk=[];
+let lmap=null,lmk=[],mcur=-1,mallB=null;
 const RKEY='sg-route-v1';
+function pinOn(i){lmk.forEach((m,k)=>{const el=m.getElement&&m.getElement();const pn=el&&el.querySelector('.pin');if(pn)pn.classList.toggle('on',k===i)})}
+function mFocus(i,first){const md=MAPDAYS[day-1];if(!lmap||i<0||i>=md.locations.length)return;mcur=i;
+ const l=md.locations[i];if(first&&mallB)lmap.fitBounds(mallB,{paddingTopLeft:[30,110],paddingBottomRight:[30,190]});else lmap.flyTo([l.lat,l.lon],13,{duration:.9});pinOn(i);
+ document.getElementById('mPrev').style.visibility=i>0?'visible':'hidden';document.getElementById('mNext').style.visibility=i<md.locations.length-1?'visible':'hidden'}
+function mGo(i){const c=document.getElementById('mcards');const cd=c&&c.children[i];if(cd)c.scrollTo({left:cd.offsetLeft-(c.clientWidth-cd.clientWidth)/2,behavior:'smooth'})}
 function drawMap(n){
- if(lmap){lmap.remove();lmap=null}lmk=[];
+ if(lmap){lmap.remove();lmap=null}lmk=[];mcur=-1;
  const el=document.getElementById('map');if(!el||!window.L)return;
  const md=MAPDAYS[n-1],c=COL[n-1];
- lmap=L.map(el,{zoomControl:true,attributionControl:true,tap:true});
+ lmap=L.map(el,{zoomControl:false,attributionControl:true});
  L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',{maxZoom:18,attribution:'<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院</a>'}).addTo(lmap);
- const pts=md.locations.map(l=>[l.lat,l.lon]);
+ const pts=md.locations.map(l=>[l.lat,l.lon]);mallB=L.latLngBounds(pts);
  const straight=L.polyline(pts,{color:c,weight:4,opacity:.55,dashArray:'6 8'}).addTo(lmap);
  md.locations.forEach((l,i)=>{
   const sub=!!l.sub,lab=sub?'':mapNo(n,i);
   const ic=L.divIcon({className:'',html:`<div class="pin${sub?' sub':''}" style="--dc:${c}">${lab}</div>`,iconSize:sub?[22,22]:[30,30],iconAnchor:sub?[11,11]:[15,15]});
-  const m=L.marker([l.lat,l.lon],{icon:ic,zIndexOffset:sub?0:100}).addTo(lmap)
-   .bindPopup(`<b>${lab?lab+'　':''}${l.name}</b><br><span style="color:#5b6168;font-size:13px">${l.t}ごろ・${l.address}</span><br><a class="btn" style="margin-top:6px" href="${D('',l.q)}" target="_blank" rel="noopener">ここへ車で行く（マップ）</a>`);
-  lmk.push(m);
+  const m=L.marker([l.lat,l.lon],{icon:ic,zIndexOffset:sub?0:100}).addTo(lmap);
+  m.on('click',()=>mGo(i));lmk.push(m);
  });
- lmap.fitBounds(L.latLngBounds(pts),{padding:[28,28]});
- // 道路に沿った線（電波があるとき取得して、このスマホに保存）
  const key=n+':'+pts.map(p=>p.join(',')).join(';');
  const cache=store.get(RKEY,{});
  const put=g=>{if(!lmap)return;straight.remove();L.polyline(g,{color:c,weight:5,opacity:.85}).addTo(lmap)};
  if(cache[key])put(cache[key]);
  else fetch('https://router.project-osrm.org/route/v1/driving/'+md.locations.map(l=>l.lon+','+l.lat).join(';')+'?overview=full&geometries=geojson')
   .then(r=>r.json()).then(j=>{const g=j.routes[0].geometry.coordinates.map(x=>[x[1],x[0]]);const cc=store.get(RKEY,{});cc[key]=g;store.set(RKEY,cc);if(day===n&&view==='day')put(g)}).catch(()=>{});
+ // 下のカードを横にスライドすると、その場所へ地図が動く（最初は1番・全体表示）
+ const cs=document.getElementById('mcards');let tm=null;
+ cs.addEventListener('scroll',()=>{clearTimeout(tm);tm=setTimeout(()=>{const w=cs.children[0].offsetWidth+10;const i=Math.max(0,Math.min(md.locations.length-1,Math.round(cs.scrollLeft/w)));if(i!==mcur)mFocus(i)},110)},{passive:true});
+ cs.scrollLeft=0;mFocus(0,true);
 }
+function mFull(on){const b=document.getElementById('mapbox');if(!b)return;b.classList.toggle('full',on);document.body.style.overflow=on?'hidden':'';setTimeout(()=>{if(lmap)lmap.invalidateSize();mGo(mcur<0?0:mcur)},60)}
 let view='day',day=1;
 function render(){
  $('#days').classList.toggle('off',view!=='day');
@@ -1015,11 +1039,11 @@ function render(){
  document.querySelectorAll('#bar button').forEach(b=>b.setAttribute('aria-current',b.dataset.v===view?'page':'false'));
  const c=view==='day'?COL[day-1]:COL[0];$('#main').style.setProperty('--dc',c);document.querySelector('header').style.background=c;
  $('#main').innerHTML=view==='day'?vDay(day):view==='ticket'?vTicket():view==='hotel'?vHotel():view==='gift'?vGift():view==='near'?vNear():vPack();
-  store.set('sg-view',[view,day]);if(view==='day')drawMap(day);else if(lmap){lmap.remove();lmap=null}phHydrate();wxFill();wxLoad();
+  store.set('sg-view',[view,day]);document.body.style.overflow='';if(view==='day')drawMap(day);else if(lmap){lmap.remove();lmap=null}phHydrate();wxFill();wxLoad();
 }
 function go(h){const m=/^day(\d)$/.exec(h);if(m){view='day';day=+m[1]}else if(['ticket','hotel','gift','near','pack'].includes(h))view=h;render();window.scrollTo(0,0)}
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
- if(t.dataset.mi!==undefined){const m=lmk[+t.dataset.mi];if(m&&lmap){lmap.setView(m.getLatLng(),15);m.openPopup();document.getElementById('map').scrollIntoView({behavior:'smooth',block:'center'})}return}
+ if(t.id==='mPrev'){mGo(mcur-1);return}if(t.id==='mNext'){mGo(mcur+1);return}if(t.id==='mAll'){if(lmap&&mallB){lmap.flyToBounds(mallB,{paddingTopLeft:[30,110],paddingBottomRight:[30,190],duration:.8});pinOn(-1)}return}if(t.id==='mFull'){mFull(true);return}if(t.id==='mClose'){mFull(false);return}
  if(t.dataset.day)location.hash='day'+t.dataset.day;else if(t.dataset.v)location.hash=t.dataset.v==='day'?'day'+day:t.dataset.v;else if(t.dataset.go)location.hash=t.dataset.go});
 document.addEventListener('change',e=>{if(e.target.type==='checkbox'){checks[e.target.id]=e.target.checked;store.set('sg-checks',checks)}else if(e.target.dataset.memo==='taku')render()});
 document.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.memo;if(k){memos[k]=e.target.value;store.set('sg-memos',memos)}});

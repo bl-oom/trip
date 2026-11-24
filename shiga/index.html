@@ -94,6 +94,7 @@ h3::before{content:"";width:6px;height:20px;background:var(--dc,var(--blue));bor
 .tabs button[aria-pressed=true]{border-color:var(--blue);color:var(--blue);font-weight:700}
 .tel{display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:12px;background:var(--red);color:#fff;text-decoration:none;font-weight:700;font-size:17px;margin:6px 0}
 .tel.alt{background:var(--teal)}
+.rain{border-left-color:#5b7f99;background:#eef4f8}
 .note{font-size:13.5px;color:var(--sub);margin-top:12px}
 nav.bar{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--bg);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding:6px 2px calc(6px + env(safe-area-inset-bottom))}
 nav.bar button{height:56px;border:none;background:none;color:var(--sub);font:700 12.5px "Noto Sans JP",sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0}
@@ -105,7 +106,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 </style>
 </head>
 <body>
-<header><h1>滋賀・比叡山 旅アプリ</h1><div class="clk" id="clk"><b>--:--</b><span>いまの時刻</span></div><p>2026年12月6日（日）〜7日（月）・じいじ と ばあば</p></header>
+<header><h1>滋賀・比叡山 旅アプリ</h1><div class="clk" id="clk"><b>--:--</b><span>いまの時刻</span></div><p>12/6（日）〜7（月）・じいじ・ばあば・恵子さん</p></header>
 <div class="days" id="days"></div>
 <main id="main"></main>
 <nav class="bar" id="bar">
@@ -133,53 +134,58 @@ const map=(q,l)=>`<a class="btn" href="${M(q)}" target="_blank" rel="noopener">$
 const nav=(d,l)=>`<a class="btn" href="${D('',d)}" target="_blank" rel="noopener">${l||'ここへ車で行く（ナビ）'}</a>`;
 const routeUrl=r=>'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(r[0])+'&destination='+encodeURIComponent(r[r.length-1])+(r.length>2?'&waypoints='+encodeURIComponent(r.slice(1,-1).join('|')):'')+'&travelmode=driving';
 let memos=store.get('sg-memos',{});
-const hotelName=()=>(memos.hotel||'').trim();
-const hotelQ=()=>hotelName()?hotelName()+' おごと温泉':'おごと温泉';
+const HOTEL='琵琶湖グランドホテル・京近江';
+const hotelQ=()=>'琵琶湖グランドホテル 京近江';
 
 const COL=['#1f6fa8','#7a4a9e'];
 const DAYS=[
-{n:1,date:'12/6',w:'日',title:'彦根城と近江八幡、夜は雄琴温泉',lead:'米原駅でレンタカーを借りて、琵琶湖の東側を南へ。夕方に琵琶湖大橋を渡って、雄琴温泉の旅館へ。',stay:'雄琴（おごと）温泉の旅館',
+{n:1,date:'12/6',w:'日',title:'彦根城と近江八幡、夜は雄琴温泉',lead:'米原駅でレンタカー（セレナ）を借りて、琵琶湖の東側を南へ。近江八幡駅で神谷さんご夫婦と合流。夕方に琵琶湖大橋を渡って、おごと温泉の琵琶湖グランドホテルへ。',stay:'琵琶湖グランドホテル・京近江（おごと温泉）',
+rain:['彦根城：天守の中は屋根の下だが、入口から天守までは坂と石段を10〜15分歩く。強い雨なら天守はやめて、隣の彦根城博物館（屋内・12月は9:00〜16:30）にする。石段は濡れると滑るので、ゆっくり。','近江八幡の散策：雨でもやるか、前日までにガイドさんに確認しておく。中止なら、日牟禮八幡宮にお参りしてから早めにラ コリーナへ。','ラ コリーナ：お店とカフェの中で過ごせるので、雨の日は長めにいてもいい。駐車場から建物までは少し歩くので傘を。'],
 plan:[
-['06:24','新富士駅を出発（こだま865号）','東海道新幹線で米原へ。乗り換えなし、約2時間。名古屋の次の次あたりで、関ヶ原を越えたら米原。',''],
-['08:21','米原駅に到着 → レンタカーを借りる','駅前のレンタカー店で手続き。代金24,616円は支払い済み。!ETCカードを車に挿す（持ってきたか確認）。スタッドレスタイヤ付きの車かも確認する。',map('米原駅','米原駅の地図'),'maibara'],
+['06:24','新富士駅を出発（こだま865号）','じいじ・ばあば・恵子さんの3人。3人ともジパング倶楽部の割引きっぷ。こだまは割引になる（のぞみは割引にならない）。!ジパング倶楽部の会員手帳（会員証）は、乗っている間も必ず持っておく。米原まで乗り換えなし、約2時間。',''],
+['08:21','米原駅に到着 → 日産レンタカーへ','車はセレナ（スタッドレスタイヤに交換済み）。代金24,616円は支払い済み。「セルフライドゴー」で申し込んであるので、店は無人。予約のメールの手順どおりに、スマホか運転免許証で車の鍵を開けて出発する。!出発前に、自分のETCカードを車に挿す。',map('日産レンタカー 米原','レンタカー店の地図'),'maibara'],
 ['08:50','彦根城へ（車で約20分）','彦根城の駐車場に停める（1回1,000円ほど）。',nav('彦根城 駐車場')],
 ['09:30<small>〜10:45</small>','彦根城を見学（天守を中心に）','国宝の天守。開いているのは8:30〜17:00、入場料は大人1,000円ほど（玄宮園とセット）。!天守の中の階段はとても急。手すりにつかまって、後ろ向きで降りると安全。帰りに隣の玄宮園（大名庭園）から見上げる天守もきれい。',map('彦根城'),'hikone'],
-['10:45','近江八幡へ（車で約45分）','琵琶湖の湖岸の道を南へ。',nav('八幡堀 近江八幡')],
-['11:30','近江八幡に到着','八幡堀の近くの観光駐車場に停める。',''],
-['11:40<small>〜12:30</small>','お昼ごはん','近江八幡は近江牛の本場。町並みの近くに近江牛のお店がある。名物の赤こんにゃくも。',map('近江牛 近江八幡 ランチ','近くのお店を探す'),'omigyu'],
+['10:45','JR近江八幡駅の北口へ（車で約40分）','神谷さんご夫婦を迎えに行く。!11:30までに北口に着くように、彦根城を出る。',nav('近江八幡駅 北口','北口へ（ナビ）')],
+['11:30','近江八幡駅の北口で神谷さんご夫婦と合流','神谷さんご夫婦は京都から来て、11:30前には北口にいるとのこと。北口のロータリーで乗ってもらい、5人でセレナで町なかへ（駅から八幡堀まで車で約10分）。着いたら八幡堀の近くの観光駐車場に停める。',map('近江八幡駅 北口','北口の地図')],
+['11:40<small>〜12:30</small>','5人でお昼ごはん','近江八幡は近江牛の本場。町並みの近くに近江牛のお店がある。名物の赤こんにゃくも。',map('近江牛 近江八幡 ランチ','近くのお店を探す'),'omigyu'],
 ['12:45<small>〜14:45</small>','ガイドさんと町並み・八幡堀を散策','ボランティアガイドは申し込み済み。お堀沿いの石畳と蔵、商人の町並み（新町通り）、日牟禮（ひむれ）八幡宮など。集合場所と時間は「きっぷ」の画面にメモしておく。',map('八幡堀'),'hbori'],
 ['14:45','ラ コリーナへ（車で約5分）','',nav('ラ コリーナ近江八幡')],
-['15:00<small>〜16:15</small>','ラ コリーナ近江八幡で見学・買い物','たねや・クラブハリエのお店。屋根が芝生でおおわれた建物が名物。焼きたてバームクーヘンのカフェ、限定のおまんじゅう「草屋根」。営業は9:00〜18:00、駐車場は無料。',map('ラ コリーナ近江八幡'),'lacollina'],
-['16:15','雄琴温泉へ（車で約1時間）','琵琶湖大橋を渡って西側へ。12月は17時前に暗くなるので、早めに出る。',`<a class="btn" data-hnav="1" href="#" target="_blank" rel="noopener">旅館へ車で行く（ナビ）</a>`],
-['17:15<small>〜17:30</small>','雄琴温泉に到着、チェックイン','旅館で夕ごはん、温泉でゆっくり。','','ogoto']
+['15:00<small>〜16:15</small>','ラ コリーナ近江八幡で見学・買い物','たねや・クラブハリエのお店。屋根が芝生でおおわれた建物が名物。焼きたてバームクーヘンのカフェ、限定のおまんじゅう「草屋根」。営業は9:00〜18:00、駐車場は無料。神谷さんご夫婦を近江八幡駅まで送る場合は、ここから駅まで車で約10分。',map('ラ コリーナ近江八幡'),'lacollina'],
+['16:15','おごと温泉へ（車で約1時間）','琵琶湖大橋を渡って西側へ。12月は17時前に暗くなるので、早めに出る。',nav('琵琶湖グランドホテル 京近江','ホテルへ（ナビ）')],
+['17:15<small>〜17:30</small>','琵琶湖グランドホテル・京近江にチェックイン','琵琶湖が見える展望露天風呂のある温泉ホテル。夕ごはんと温泉でゆっくり。','']
 ],
-route:['米原駅','彦根城','八幡堀 近江八幡','ラ コリーナ近江八幡','おごと温泉'],
-need:['新幹線のきっぷ','運転免許証','ETCカード','歩きやすい靴（彦根城の急な階段）','小銭と千円札（駐車場・入場料）']},
-{n:2,date:'12/7',w:'月',title:'比叡山延暦寺にお参りして、米原から帰る',lead:'朝はゆっくり。旅館から比叡山は車で約30分。山の上は町より5℃以上寒いので、上着と手袋を。',stay:'自宅（新富士着 19:36）',
+route:['米原駅','彦根城','近江八幡駅','八幡堀 近江八幡','ラ コリーナ近江八幡','琵琶湖グランドホテル 京近江'],
+need:['ジパング倶楽部の会員手帳（会員証）','新幹線のきっぷ','運転免許証','ETCカード（自分のもの）','歩きやすい靴（彦根城の急な階段）','小銭と千円札（駐車場・入場料）','折りたたみ傘']},
+{n:2,date:'12/7',w:'月',title:'比叡山延暦寺にお参りして、米原から帰る',lead:'朝はゆっくり。ホテルから比叡山は車で約30分。山の上は町より5℃以上寒いので、上着と手袋を。',stay:'自宅（新富士着 19:36）',
+rain:['延暦寺：お堂の中は屋根の下だが、お堂とお堂の間は外を歩く。雨の日は根本中堂と国宝殿（屋内）を中心にして、西塔はやめる。','山の上は町より寒いので、雨が雪やみぞれになることがある。!雪や凍結でドライブウェイが通行止めのときは、ふもとの坂本からケーブルカー（坂本ケーブル）で上がる。ケーブル延暦寺駅から根本中堂まで歩いて約10分。','時間が余ったら、ふもとの日吉大社や西教寺（坂本）へ。'],
 plan:[
-['07:00<small>〜08:00</small>','旅館で朝ごはん','',''],
-['08:45','雄琴温泉を出発','!奥比叡ドライブウェイ（仰木の料金所）は、12月は朝9:00にならないと開かない。工程表の8:30発だと早く着きすぎるので、8:45ごろの出発でちょうどいい。',nav('奥比叡ドライブウェイ 仰木料金所','料金所へ（ナビ）')],
+['07:00<small>〜08:00</small>','ホテルで朝ごはん','チェックアウトの前に、琵琶湖の朝の景色を。',''],
+['08:45','ホテルを出発','!奥比叡ドライブウェイ（仰木の料金所）は、12月は朝9:00にならないと開かない。工程表の8:30発だと早く着きすぎるので、8:45ごろの出発でちょうどいい。',nav('奥比叡ドライブウェイ 仰木料金所','料金所へ（ナビ）')],
 ['09:00','奥比叡ドライブウェイの料金所','ここから比叡山の上まで山道。料金所でお金を払う（帰りに田ノ谷峠へ抜けると全部で2,430円ほど）。!雪や凍結のときは通行止めになることがある。',''],
 ['09:15','延暦寺 東塔（とうどう）に到着','東塔の駐車場（無料）に停める。すぐ横の延暦寺バスセンターが目印。',map('延暦寺 東塔駐車場','駐車場の地図')],
 ['09:15<small>〜12:00</small>','延暦寺を見学','根本中堂（こんぽんちゅうどう）、大講堂、文殊楼（もんじゅろう）など。拝観は9:00〜16:00、巡拝料は大人1,000円（国宝殿とセットで1,500円）。根本中堂の中の「不滅の法灯」は1200年消えずに灯り続けている火。!文殊楼の階段はとても急。',map('延暦寺 根本中堂'),'konpon'],
 ['12:00<small>〜13:00</small>','お昼ごはん・休けい','東塔の延暦寺会館に食事処と喫茶がある。無料の休憩所（一隅会館）もある。','','daikodo'],
 ['13:00<small>〜14:15</small>','境内を散策・国宝殿','国宝殿（宝物館）は12月は9:00〜16:00。時間と体力に余裕があれば、車で5分の西塔（さいとう）の釈迦堂へ。',map('比叡山国宝殿'),'monju'],
-['14:30','延暦寺を出発 → 米原駅へ（約1時間20分）','比叡山ドライブウェイで田ノ谷峠へ下り、京都東ICから名神高速で米原ICへ。!レンタカーはガソリンを満タンにして返す（米原の近くで給油）。',nav('米原駅','米原駅へ（ナビ）')],
-['16:00ごろ','米原駅に着いて、レンタカーを返す','新幹線まで1時間半ある。駅の売店で駅弁やおみやげを。',''],
-['17:34','米原駅を出発（こだま844号）','',''],
+['14:30','延暦寺を出発 → 米原駅へ（約1時間20分）','比叡山ドライブウェイで田ノ谷峠へ下り、京都東ICから名神高速で米原ICへ。!レンタカーはガソリンを満タンにして返す（店の近くで給油）。',nav('日産レンタカー 米原','レンタカー店へ（ナビ）')],
+['16:00ごろ','日産レンタカーに車を返す','無人の店なので、予約のメールの手順どおりに返却する。!ETCカードを抜き忘れない。車の中に忘れ物がないかも確認。新幹線まで1時間半あるので、駅の売店で駅弁やおみやげを。',''],
+['17:34','米原駅を出発（こだま844号）','帰りもジパング倶楽部の割引きっぷ。',''],
 ['19:36','新富士駅に到着','おつかれさまでした。','']
 ],
-route:['おごと温泉','延暦寺 東塔駐車場','米原駅'],
-need:['あたたかい上着・手袋（山の上は寒い）','滑りにくい靴','レンタカーの返却（ガソリン満タン）','新幹線のきっぷ（帰り）']}
+route:['琵琶湖グランドホテル 京近江','延暦寺 東塔駐車場','日産レンタカー 米原'],
+need:['ジパング倶楽部の会員手帳（会員証）','あたたかい上着・手袋（山の上は寒い）','滑りにくい靴','レンタカーの返却（ガソリン満タン・ETCカードを抜く）','新幹線のきっぷ（帰り）']}
 ];
 const TK=[
-{day:1,id:'sk1',nm:'新幹線　新富士 → 米原（こだま865号）',st:'day',body:'12/6（日）新富士 06:24発 → 米原 08:21着。きっぷの買い方・座席は要確認。',memo:'座席・きっぷのメモ'},
-{day:1,id:'car',nm:'レンタカー（米原駅）',st:'paid',body:'12/6 米原駅で借りて、12/7 米原駅で返す。代金24,616円は支払い済み。ETCカードを持参。比叡山があるので冬用タイヤ（スタッドレス）付きの車。',memo:'レンタカー会社・予約番号・電話'},
-{day:1,id:'guide',nm:'近江八幡 ボランティアガイド',st:'ok',body:'12/6（日）12:45〜14:45ごろ。八幡堀と町並みを案内してもらう。申し込み済み。',memo:'集合場所・時間・連絡先'},
+{day:1,id:'zip',nm:'ジパング倶楽部（3人とも）',st:'ok',body:'じいじ・ばあば・恵子さんの3人とも、ジパング倶楽部の割引きっぷで行く。こだまは割引になる（のぞみは割引にならない）。!会員手帳（会員証）は、きっぷを買うときも、乗るときも必ず持つ。きっぷは本人しか使えない。'},
+{day:1,id:'sk1',nm:'新幹線　新富士 → 米原（こだま865号）',st:'day',body:'12/6（日）新富士 06:24発 → 米原 08:21着。ジパング倶楽部の割引きっぷ（3人分）。',memo:'座席・きっぷのメモ'},
+{day:1,id:'car',nm:'日産レンタカー（米原）　セレナ',st:'paid',body:'12/6 米原で借りて、12/7 米原で返す。代金24,616円は支払い済み。タイヤはスタッドレスに交換済み。「セルフライドゴー」（無人の貸し出し）で申し込み済み。店に人はいないので、予約のメールの手順どおりにスマホか運転免許証で鍵を開ける。!ETCカードは自分のものを持っていく。',memo:'予約番号・店の名前・緊急連絡先'},
+{day:1,id:'kamiya',nm:'神谷さんご夫婦と合流',st:'ok',body:'12/6（日）11:30前に、JR近江八幡駅の北口。京都から来る。',memo:'神谷さんの電話番号'},
+{day:1,id:'guide',nm:'近江八幡 ボランティアガイド',st:'ok',body:'12/6（日）12:45〜14:45ごろ。八幡堀と町並みを案内してもらう。申し込み済み。雨の日もやるかは前日までに確認。',memo:'集合場所・時間・連絡先'},
 {day:1,id:'hikone',nm:'彦根城の入場券',st:'day',body:'当日、入口で買う。大人1,000円ほど（玄宮園とセット）。'},
+{day:1,id:'hotel',nm:'琵琶湖グランドホテル・京近江',st:'ok',body:'12/6（日）1泊。チェックインは15:00（京近江の部屋は14:00）。電話 077-579-2111。',memo:'予約番号・部屋のメモ'},
 {day:2,id:'dw',nm:'奥比叡・比叡山ドライブウェイ',st:'day',body:'料金所で払う。仰木から入って田ノ谷峠へ抜けると2,430円ほど（普通車）。12月は9:00〜20:00ごろ。'},
 {day:2,id:'enr',nm:'延暦寺の巡拝料',st:'day',body:'当日、受付で買う。大人1,000円。国宝殿とセットなら1,500円。'},
-{day:2,id:'sk2',nm:'新幹線　米原 → 新富士（こだま844号）',st:'day',body:'12/7（月）米原 17:34発 → 新富士 19:36着。',memo:'座席・きっぷのメモ'}
+{day:2,id:'sk2',nm:'新幹線　米原 → 新富士（こだま844号）',st:'day',body:'12/7（月）米原 17:34発 → 新富士 19:36着。ジパング倶楽部の割引きっぷ（3人分）。',memo:'座席・きっぷのメモ'}
 ];
 const B={ok:['ok','申し込み済み'],paid:['ok','支払い済み'],todo:['todo','まだ'],day:['day','当日でOK']};
 const tkCard=t=>`<div class="card"><p class="v">${t.nm}<span class="badge ${B[t.st][0]}">${B[t.st][1]}</span></p><div>${F(t.body)}</div>${t.memo?`<input class="memo" data-memo="${t.id}" placeholder="${t.memo}（このスマホに保存）" value="${esc(memos[t.id]||'')}">`:''}</div>`;
@@ -203,7 +209,7 @@ const NEAR=[
 {ph:'hiyoshi',nm:'日吉大社（ひよしたいしゃ）',wh:'比叡山のふもと・坂本',tx:'比叡山の守り神をまつる神社。石垣の町並みの坂本も、歩くと風情がある。'},
 {ph:'daikodo',nm:'延暦寺の西塔（さいとう）・横川（よかわ）',wh:'東塔から車で5〜15分',tx:'西塔の釈迦堂は延暦寺でいちばん古い建物。12月の拝観は9:30〜16:00。'}
 ];
-const PACK=['新幹線のきっぷ（行き・帰り）','運転免許証','ETCカード','保険証','いつものお薬','スマホと充電器','あたたかい上着・手袋・マフラー（比叡山は寒い）','歩きやすい・滑りにくい靴','現金（小銭と千円札）','クレジットカード','眼鏡・老眼鏡','温泉用の着替え'];
+const PACK=['ジパング倶楽部の会員手帳（会員証）','新幹線のきっぷ（行き・帰り）','運転免許証','ETCカード','保険証','いつものお薬','スマホと充電器','あたたかい上着・手袋・マフラー（比叡山は寒い）','歩きやすい・滑りにくい靴','現金（小銭と千円札）','クレジットカード','眼鏡・老眼鏡','温泉用の着替え','折りたたみ傘・レインコート'];
 
 // 写真（Wikipediaの写真＋このスマホで追加した写真）
 const PHOTOS=window.PHOTOS||{};
@@ -237,24 +243,30 @@ function vDay(n){
  <div class="wx" data-date="2026-12-0${n===1?6:7}" data-city="${n===1?'hk':'hi'}"></div><p class="lead">${F(d.lead)}</p>
  <div class="split"><div><a class="route" href="${routeUrl(d.route)}" target="_blank" rel="noopener">この日のルートをGoogleマップで開く</a>
  <ol class="tl">${d.plan.map((p,i)=>`<li><time>${p[0]}</time><div><div class="t">${p[1]}</div>${p[2]?`<div class="d">${F(p[2])}</div>`:''}${p[4]?phBox(p[4],p[1]):''}${p[3]?`<div class="btns">${p[3]}</div>`:''}</div></li>`).join('')}</ol></div>
- <aside><h3>この日に持つもの</h3><ul class="need">${d.need.map((t,i)=>ck('d'+n+'-'+i,t)).join('')}</ul>
- <h3>今夜の宿</h3><div class="card"><p class="v">${n===1&&hotelName()?esc(hotelName()):d.stay}</p>${n===1?`<div class="btns"><button class="btn" data-go="hotel">宿の詳細</button></div>`:''}</div>
+ <aside><h3>雨や雪の日は</h3><div class="card rain">${d.rain.map(x=>`<p style="margin:0 0 6px">${F(x)}</p>`).join('')}</div>
+ <h3>この日に持つもの</h3><ul class="need">${d.need.map((t,i)=>ck('d'+n+'-'+i,t)).join('')}</ul>
+ <h3>今夜の宿</h3><div class="card"><p class="v">${d.stay}</p>${n===1?`<div class="btns"><button class="btn" data-go="hotel">宿の詳細</button></div>`:''}</div>
  <h3>この日のきっぷ・予約</h3>${TK.filter(t=>t.day===n).map(tkCard).join('')}</aside></div>`;
 }
 function vTicket(){return `<h2>きっぷ・予約</h2><p class="lead">メモ欄に書いたことは、このスマホに残る。</p><div class="cols">${TK.map(t=>tkCard({...t,nm:t.day+'日目　'+t.nm})).join('')}</div>`}
-function vHotel(){return `<h2>宿</h2><p class="lead">12/6（日）に1泊。夕食・朝食付き。</p>
- <div class="card">${phBox('ogoto','雄琴温泉')}<p class="v">${hotelName()?esc(hotelName()):'雄琴（おごと）温泉の旅館'}</p>
- <p class="k">旅館の名前</p><input class="memo" data-memo="hotel" placeholder="旅館の名前を入れる" value="${esc(memos.hotel||'')}">
- <p class="k">電話番号</p><input class="memo" data-memo="htel" inputmode="tel" placeholder="例：077-578-xxxx" value="${esc(memos.htel||'')}">
- <p class="k">予約番号・メモ</p><input class="memo" data-memo="hres" placeholder="予約番号やチェックイン時間など" value="${esc(memos.hres||'')}">
- <div class="btns">${map(hotelQ(),'旅館の地図')}<a class="btn" data-hnav="1" href="#" target="_blank" rel="noopener">旅館へ車で行く（ナビ）</a>${memos.htel?`<a class="btn" href="tel:${esc(memos.htel.replace(/[^0-9+]/g,''))}">旅館に電話する</a>`:''}</div></div>
- <div class="card"><p class="v">雄琴温泉ってどんなところ？</p><p>比叡山のふもと、琵琶湖の西岸にある温泉街。最澄が開いたと伝わる、1200年の歴史がある温泉。宿から琵琶湖と朝日が見えるところも多い。</p></div>`}
+function vHotel(){return `<h2>宿</h2><p class="lead">12/6（日）に1泊。おごと温泉。</p>
+ <div class="card">${phBox('hotel','琵琶湖グランドホテル')}<p class="v">琵琶湖グランドホテル・京近江</p>
+ <p class="k">住所</p><p>滋賀県大津市雄琴6-5-1</p>
+ <p class="k">電話</p><p>077-579-2111</p>
+ <p class="k">チェックイン／アウト</p><p>本館（琵琶湖グランドホテル）15:00／10:00　別館（京近江）14:00／11:00</p>
+ <p class="k">駐車場</p><p>あり（無料）</p>
+ <p class="k">予約番号・部屋のメモ</p><input class="memo" data-memo="hotel" placeholder="予約番号や部屋（本館か京近江か）など" value="${esc(memos.hotel||'')}">
+ <div class="btns">${map(hotelQ(),'ホテルの地図')}${nav(hotelQ(),'ホテルへ車で行く（ナビ）')}<a class="btn" href="tel:0775792111">ホテルに電話する</a></div></div>
+ <div class="card"><p class="v">どんなホテル？</p><p>${F('琵琶湖のほとりに建つ温泉ホテル。本館「琵琶湖グランドホテル」と別館「京近江」に分かれている。大浴場は4つで、琵琶湖を見渡す展望露天風呂が2つ、お庭を見る露天風呂が2つ。館内を湯めぐりできる。夕ごはんは近江牛などを使った会席料理。1階にローソンがあって、ATMや琵琶湖のおみやげもある。')}</p></div>
+ <div class="card"><p class="v">おごと温泉ってどんなところ？</p><p>比叡山のふもと、琵琶湖の西岸にある温泉街。最澄が開いたと伝わる、1200年の歴史がある温泉。</p></div>`}
 function spot(s){return `<div class="spot"><p class="wh">${s.wh}</p><p class="nm">${s.nm}</p>${phBox(s.ph,s.nm)}<p>${s.tx}</p><div class="btns">${map(s.nm.replace(/（.*?）/g,'')+' 滋賀')}</div></div>`}
 function vGift(){return `<h2>おみやげ</h2><p class="lead">通る場所の順番に並べた。</p><div class="cols">${GIFT.map(spot).join('')}</div>`}
 function vNear(){return `<h2>近くの見どころ</h2><p class="lead">時間が余ったときや、次に来るときに。</p><div class="cols">${NEAR.map(spot).join('')}</div>`}
 function vPack(){return `<h2>準備・困ったとき</h2><div class="cols"><div><h3>持ち物</h3><p class="note" style="margin:0">チェックはこのスマホに残る。</p><ul class="need">${PACK.map((t,i)=>ck('p'+i,t)).join('')}</ul></div>
  <div><h3>困ったとき</h3>${memos.taku?`<a class="tel" href="tel:${esc(memos.taku.replace(/[^0-9+]/g,''))}">拓馬に電話する</a>`:''}<input class="memo" data-memo="taku" placeholder="拓馬の電話番号を入れておく（このスマホだけに保存）" inputmode="tel" value="${esc(memos.taku||'')}" style="margin-bottom:6px"><a class="tel alt" href="tel:119">救急車・火事 119</a><a class="tel alt" href="tel:110">警察 110</a>
  <div class="card"><p class="v">車のトラブル（パンク・事故）</p><p>まずレンタカー会社の緊急連絡先へ（借りるときの書類に書いてある）。事故のときは警察（110）にも必ず連絡する。</p></div>
+ <h3>ジパング倶楽部</h3><div class="card"><p>${F('じいじ・ばあば・恵子さんの3人とも、ジパング倶楽部（65歳以上のJRの割引）のきっぷで行く。会員手帳（会員証）は、きっぷを買うときも、乗るときも必ず持つ。顔写真が貼っていない場合は、運転免許証など顔写真付きの証明書も一緒に。こだまは割引になるが、のぞみは割引にならない。')}</p></div>
+ <h3>雨や雪の日</h3><div class="card rain"><p>${F('雨や雪の日の回り方は、「日程」の画面のそれぞれの日に書いてある。前の晩にホテルで天気を見て決める。')}</p></div>
  <h3>運転の注意</h3><div class="card"><p>${F('12月の比叡山は、朝晩に路面が凍結することがある。山道はスピードを落として、急ブレーキをかけない。ドライブウェイが雪で通行止めのときは、延暦寺へはふもとの坂本からケーブルカーでも行ける。')}</p></div>
  <h3>このアプリの使い方</h3><div class="card"><p>Safariで開いたら、下の共有ボタン →「ホーム画面に追加」で、アプリのように使える。写真の枠をタップすると、自分で撮った写真に替えられる。</p></div></div></div>
  <p class="note">※新幹線の時刻・施設の営業時間は、出かける前に確認してください。料金や時間は2026年11月に調べた目安です。</p>`}
@@ -277,13 +289,12 @@ function render(){
  document.querySelectorAll('#bar button').forEach(b=>b.setAttribute('aria-current',b.dataset.v===view?'page':'false'));
  const c=view==='day'?COL[day-1]:COL[0];$('#main').style.setProperty('--dc',c);document.querySelector('header').style.background=c;
  $('#main').innerHTML=view==='day'?vDay(day):view==='ticket'?vTicket():view==='hotel'?vHotel():view==='gift'?vGift():view==='near'?vNear():vPack();
- document.querySelectorAll('[data-hnav]').forEach(a=>a.href=D('',hotelQ()));
- store.set('sg-view',[view,day]);phHydrate();wxFill();wxLoad();
+  store.set('sg-view',[view,day]);phHydrate();wxFill();wxLoad();
 }
 function go(h){const m=/^day(\d)$/.exec(h);if(m){view='day';day=+m[1]}else if(['ticket','hotel','gift','near','pack'].includes(h))view=h;render();window.scrollTo(0,0)}
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
  if(t.dataset.day)location.hash='day'+t.dataset.day;else if(t.dataset.v)location.hash=t.dataset.v==='day'?'day'+day:t.dataset.v;else if(t.dataset.go)location.hash=t.dataset.go});
-document.addEventListener('change',e=>{if(e.target.type==='checkbox'){checks[e.target.id]=e.target.checked;store.set('sg-checks',checks)}else if(e.target.dataset.memo&&/^(h|taku)/.test(e.target.dataset.memo))render()});
+document.addEventListener('change',e=>{if(e.target.type==='checkbox'){checks[e.target.id]=e.target.checked;store.set('sg-checks',checks)}else if(e.target.dataset.memo==='taku')render()});
 document.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.memo;if(k){memos[k]=e.target.value;store.set('sg-memos',memos)}});
 window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
 const saved=store.get('sg-view',null);

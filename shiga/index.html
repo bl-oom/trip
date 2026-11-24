@@ -809,30 +809,31 @@ const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e)
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const WK=/注意|必ず|忘れ|開かない|閉まる|までに|急な|滑り|凍結|雪|要確認/;
 const F=s=>{if(!s)return'';return String(s).split(/(?<=。)/).map(x=>x.trim()).filter(Boolean).map(x=>{let w=false;if(x.startsWith('!')){w=true;x=x.slice(1)}else if(WK.test(x))w=true;return `<span class="${w?'ln warn':'ln'}">${x.replace(/。$/,'')}</span>`}).join('')};
-const M=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
-const D=(o,d,m)=>'https://www.google.com/maps/dir/?api=1'+(o?'&origin='+encodeURIComponent(o):'')+'&destination='+encodeURIComponent(d)+'&travelmode='+(m||'driving');
+// iPhoneの「マップ」（Appleマップ）で開く
+const M=q=>'https://maps.apple.com/?q='+encodeURIComponent(q);
+const D=(o,d)=>'https://maps.apple.com/?'+(o?'saddr='+encodeURIComponent(o)+'&':'')+'daddr='+encodeURIComponent(d)+'&dirflg=d';
 const map=(q,l)=>`<a class="btn" href="${M(q)}" target="_blank" rel="noopener">${l||'地図'}</a>`;
-const nav=(d,l)=>`<a class="btn" href="${D('',d)}" target="_blank" rel="noopener">${l||'ここへ車で行く（ナビ）'}</a>`;
-const routeUrl=r=>'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(r[0])+'&destination='+encodeURIComponent(r[r.length-1])+(r.length>2?'&waypoints='+encodeURIComponent(r.slice(1,-1).join('|')):'')+'&travelmode=driving';
+const nav=(d,l)=>`<a class="btn" href="${D('',d)}" target="_blank" rel="noopener">${l||'ここへ車で行く（マップ）'}</a>`;
+const routeUrl=r=>'https://maps.apple.com/?saddr='+encodeURIComponent(r[0])+r.slice(1).map(x=>'&daddr='+encodeURIComponent(x)).join('')+'&dirflg=d';
 let memos=store.get('sg-memos',{});
 const HOTEL='琵琶湖グランドホテル・京近江';
-const hotelQ=()=>'琵琶湖グランドホテル 京近江';
+const hotelQ=()=>'琵琶湖グランドホテル';
 
 const COL=['#1f6fa8','#7a4a9e'];
 // 地図（じいじのChatGPTの地図データをもとに、座標と合流場所などを足したもの）
 const MAPDAYS=[
 {date:'2026-12-06',title:'1日目',locations:[
- {name:'米原駅・日産レンタカー',address:'滋賀県米原市米原',lat:35.31477,lon:136.28984,t:'08:21'},
- {name:'彦根城',address:'滋賀県彦根市金亀町1-1',lat:35.27652,lon:136.25184,t:'09:30'},
- {name:'JR近江八幡駅 北口（神谷さんご夫婦と合流）',address:'滋賀県近江八幡市鷹飼町',lat:35.12314,lon:136.10209,t:'11:30'},
- {name:'近江八幡・八幡堀',address:'滋賀県近江八幡市宮内町',lat:35.13970,lon:136.08996,t:'11:40'},
- {name:'ラ コリーナ近江八幡',address:'滋賀県近江八幡市北之庄町615-1',lat:35.14890,lon:136.09138,t:'15:00'},
- {name:'琵琶湖グランドホテル・京近江（雄琴温泉）',address:'滋賀県大津市雄琴6-5-1',lat:35.08776,lon:135.89738,t:'17:15'}]},
+ {q:'日産レンタカー 米原',name:'米原駅・日産レンタカー',address:'滋賀県米原市米原',lat:35.31477,lon:136.28984,t:'08:21'},
+ {q:'彦根城',name:'彦根城',address:'滋賀県彦根市金亀町1-1',lat:35.27652,lon:136.25184,t:'09:30'},
+ {q:'近江八幡駅',name:'JR近江八幡駅 北口（神谷さんご夫婦と合流）',address:'滋賀県近江八幡市鷹飼町',lat:35.12314,lon:136.10209,t:'11:30'},
+ {q:'八幡堀',name:'近江八幡・八幡堀',address:'滋賀県近江八幡市宮内町',lat:35.13970,lon:136.08996,t:'11:40'},
+ {q:'ラ コリーナ近江八幡',name:'ラ コリーナ近江八幡',address:'滋賀県近江八幡市北之庄町615-1',lat:35.14890,lon:136.09138,t:'15:00'},
+ {q:'琵琶湖グランドホテル',name:'琵琶湖グランドホテル・京近江（雄琴温泉）',address:'滋賀県大津市雄琴6-5-1',lat:35.08776,lon:135.89738,t:'17:15'}]},
 {date:'2026-12-07',title:'2日目',locations:[
- {name:'琵琶湖グランドホテル・京近江（雄琴温泉）',address:'滋賀県大津市雄琴6-5-1',lat:35.08776,lon:135.89738,t:'08:45'},
- {name:'奥比叡ドライブウェイ 仰木料金所',address:'滋賀県大津市仰木2丁目',lat:35.10717,lon:135.87050,t:'09:00',sub:1},
- {name:'比叡山延暦寺・東塔',address:'滋賀県大津市坂本本町4220',lat:35.07050,lon:135.84096,t:'09:15'},
- {name:'米原駅・日産レンタカー',address:'滋賀県米原市米原',lat:35.31477,lon:136.28984,t:'16:00'}]}
+ {q:'琵琶湖グランドホテル',name:'琵琶湖グランドホテル・京近江（雄琴温泉）',address:'滋賀県大津市雄琴6-5-1',lat:35.08776,lon:135.89738,t:'08:45'},
+ {q:'奥比叡ドライブウェイ 仰木料金所',name:'奥比叡ドライブウェイ 仰木料金所',address:'滋賀県大津市仰木2丁目',lat:35.10717,lon:135.87050,t:'09:00',sub:1},
+ {q:'延暦寺 根本中堂',name:'比叡山延暦寺・東塔',address:'滋賀県大津市坂本本町4220',lat:35.07050,lon:135.84096,t:'09:15'},
+ {q:'日産レンタカー 米原',name:'米原駅・日産レンタカー',address:'滋賀県米原市米原',lat:35.31477,lon:136.28984,t:'16:00'}]}
 ];
 const DAYS=[
 {n:1,date:'12/6',w:'日',title:'彦根城と近江八幡、夜は雄琴温泉',lead:'米原駅でレンタカー（セレナ）を借りて、琵琶湖の東側を南へ。近江八幡駅で神谷さんご夫婦と合流。夕方に琵琶湖大橋を渡って、おごと温泉の琵琶湖グランドホテルへ。',stay:'琵琶湖グランドホテル・京近江（おごと温泉）',
@@ -844,14 +845,14 @@ plan:[
 ['09:30<small>〜10:45</small>','彦根城を見学（天守を中心に）','国宝の天守。開いているのは8:30〜17:00、入場料は大人1,000円ほど（玄宮園とセット）。!天守の中の階段はとても急。手すりにつかまって、後ろ向きで降りると安全。帰りに隣の玄宮園（大名庭園）から見上げる天守もきれい。',map('彦根城'),'hikone'],
 ['10:45','JR近江八幡駅の北口へ（車で約40分）','神谷さんご夫婦を迎えに行く。!11:30までに北口に着くように、彦根城を出る。',nav('近江八幡駅 北口','北口へ（ナビ）')],
 ['11:30','近江八幡駅の北口で神谷さんご夫婦と合流','神谷さんご夫婦は京都から来て、11:30前には北口にいるとのこと。北口のロータリーで乗ってもらい、5人でセレナで町なかへ（駅から八幡堀まで車で約10分）。着いたら八幡堀の近くの観光駐車場に停める。',map('近江八幡駅 北口','北口の地図')],
-['11:40<small>〜12:30</small>','5人でお昼ごはん','近江八幡は近江牛の本場。町並みの近くに近江牛のお店がある。名物の赤こんにゃくも。',map('近江牛 近江八幡 ランチ','近くのお店を探す'),'omigyu'],
+['11:40<small>〜12:30</small>','5人でお昼ごはん','近江八幡は近江牛の本場。町並みの近くに近江牛のお店がある。名物の赤こんにゃくも。',map('近江牛 近江八幡','近くのお店を探す'),'omigyu'],
 ['12:45<small>〜14:45</small>','ガイドさんと町並み・八幡堀を散策','ボランティアガイドは申し込み済み。お堀沿いの石畳と蔵、商人の町並み（新町通り）、日牟禮（ひむれ）八幡宮など。集合場所と時間は「きっぷ」の画面にメモしておく。',map('八幡堀'),'hbori'],
 ['14:45','ラ コリーナへ（車で約5分）','',nav('ラ コリーナ近江八幡')],
 ['15:00<small>〜16:15</small>','ラ コリーナ近江八幡で見学・買い物','たねや・クラブハリエのお店。屋根が芝生でおおわれた建物が名物。焼きたてバームクーヘンのカフェ、限定のおまんじゅう「草屋根」。営業は9:00〜18:00、駐車場は無料。神谷さんご夫婦を近江八幡駅まで送る場合は、ここから駅まで車で約10分。',map('ラ コリーナ近江八幡'),'lacollina'],
-['16:15','おごと温泉へ（車で約1時間）','琵琶湖大橋を渡って西側へ。12月は17時前に暗くなるので、早めに出る。',nav('琵琶湖グランドホテル 京近江','ホテルへ（ナビ）')],
+['16:15','おごと温泉へ（車で約1時間）','琵琶湖大橋を渡って西側へ。12月は17時前に暗くなるので、早めに出る。',nav('琵琶湖グランドホテル','ホテルへ（ナビ）')],
 ['17:15<small>〜17:30</small>','琵琶湖グランドホテル・京近江にチェックイン','琵琶湖が見える展望露天風呂のある温泉ホテル。夕ごはんと温泉でゆっくり。','']
 ],
-route:['米原駅','彦根城','近江八幡駅','八幡堀 近江八幡','ラ コリーナ近江八幡','琵琶湖グランドホテル 京近江'],
+route:['米原駅','彦根城','近江八幡駅','八幡堀 近江八幡','ラ コリーナ近江八幡','琵琶湖グランドホテル'],
 need:['ジパング倶楽部の会員手帳（会員証）','新幹線のきっぷ','運転免許証','ETCカード（自分のもの）','歩きやすい靴（彦根城の急な階段）','小銭と千円札（駐車場・入場料）','折りたたみ傘']},
 {n:2,date:'12/7',w:'月',title:'比叡山延暦寺にお参りして、米原から帰る',lead:'朝はゆっくり。ホテルから比叡山は車で約30分。山の上は町より5℃以上寒いので、上着と手袋を。',stay:'自宅（新富士着 19:36）',
 rain:['延暦寺：お堂の中は屋根の下だが、お堂とお堂の間は外を歩く。雨の日は根本中堂と国宝殿（屋内）を中心にして、西塔はやめる。','山の上は町より寒いので、雨が雪やみぞれになることがある。!雪や凍結でドライブウェイが通行止めのときは、ふもとの坂本からケーブルカー（坂本ケーブル）で上がる。ケーブル延暦寺駅から根本中堂まで歩いて約10分。','時間が余ったら、ふもとの日吉大社や西教寺（坂本）へ。'],
@@ -868,7 +869,7 @@ plan:[
 ['17:34','米原駅を出発（こだま844号）','帰りもジパング倶楽部の割引きっぷ。',''],
 ['19:36','新富士駅に到着','おつかれさまでした。','']
 ],
-route:['琵琶湖グランドホテル 京近江','延暦寺 東塔駐車場','日産レンタカー 米原'],
+route:['琵琶湖グランドホテル','延暦寺 東塔駐車場','日産レンタカー 米原'],
 need:['ジパング倶楽部の会員手帳（会員証）','あたたかい上着・手袋（山の上は寒い）','滑りにくい靴','レンタカーの返却（ガソリン満タン・ETCカードを抜く）','新幹線のきっぷ（帰り）']}
 ];
 const TK=[
@@ -938,7 +939,7 @@ function vDay(n){
  return `<div class="hero"><svg viewBox="0 0 400 120" preserveAspectRatio="xMaxYMax slice" aria-hidden="true">${ART[n-1]}</svg><div class="tx"><div class="no">${n}日目　${d.date}（${d.w}）</div><h2>${d.title}</h2></div></div>
  <div class="wx" data-date="2026-12-0${n===1?6:7}" data-city="${n===1?'hk':'hi'}"></div><p class="lead">${F(d.lead)}</p>
  <h3>この日の地図</h3><div class="mapbox"><div id="map" aria-label="${n}日目の地図"></div><ol class="mapst">${MAPDAYS[n-1].locations.map((l,i)=>`<li><button data-mi="${i}"><span class="num"${l.sub?' style="background:#fff;color:var(--dc);border-color:var(--dc)"':''}>${l.sub?'・':mapNo(n,i)}</span><span class="nm">${l.name}<span class="ad">${l.t}ごろ・${l.address}</span></span><span class="go">地図で見る</span></button></li>`).join('')}</ol></div>
- <a class="route" href="${routeUrl(d.route)}" target="_blank" rel="noopener">この日のルートをGoogleマップで開く（ナビ）</a>
+ <a class="route" href="${routeUrl(d.route)}" target="_blank" rel="noopener">この日のルートを「マップ」で開く（ナビ）</a>
  <div class="split"><div>
  <ol class="tl">${d.plan.map((p,i)=>`<li><time>${p[0]}</time><div><div class="t">${p[1]}</div>${p[2]?`<div class="d">${F(p[2])}</div>`:''}${p[4]?phBox(p[4],p[1]):''}${p[3]?`<div class="btns">${p[3]}</div>`:''}</div></li>`).join('')}</ol></div>
  <aside><h3>雨や雪の日は</h3><div class="card rain">${d.rain.map(x=>`<p style="margin:0 0 6px">${F(x)}</p>`).join('')}</div>
@@ -966,7 +967,7 @@ function vPack(){return `<h2>準備・困ったとき</h2><div class="cols"><div
  <h3>ジパング倶楽部</h3><div class="card"><p>${F('じいじ・ばあば・恵子さんの3人とも、ジパング倶楽部（65歳以上のJRの割引）のきっぷで行く。会員手帳（会員証）は、きっぷを買うときも、乗るときも必ず持つ。顔写真が貼っていない場合は、運転免許証など顔写真付きの証明書も一緒に。こだまは割引になるが、のぞみは割引にならない。')}</p></div>
  <h3>雨や雪の日</h3><div class="card rain"><p>${F('雨や雪の日の回り方は、「日程」の画面のそれぞれの日に書いてある。前の晩にホテルで天気を見て決める。')}</p></div>
  <h3>運転の注意</h3><div class="card"><p>${F('12月の比叡山は、朝晩に路面が凍結することがある。山道はスピードを落として、急ブレーキをかけない。ドライブウェイが雪で通行止めのときは、延暦寺へはふもとの坂本からケーブルカーでも行ける。')}</p></div>
- <h3>このアプリの使い方</h3><div class="card"><p>Safariで開いたら、下の共有ボタン →「ホーム画面に追加」で、アプリのように使える。写真の枠をタップすると、自分で撮った写真に替えられる。</p></div></div></div>
+ <h3>このアプリの使い方</h3><div class="card"><p>地図やナビのボタンを押すと、iPhoneの「マップ」アプリが開く。Safariで開いたら、下の共有ボタン →「ホーム画面に追加」で、アプリのように使える。写真の枠をタップすると、自分で撮った写真に替えられる。</p></div></div></div>
  <p class="note">※新幹線の時刻・施設の営業時間は、出かける前に確認してください。料金や時間は2026年11月に調べた目安です。</p>`}
 
 // 時計と天気
@@ -995,7 +996,7 @@ function drawMap(n){
   const sub=!!l.sub,lab=sub?'':mapNo(n,i);
   const ic=L.divIcon({className:'',html:`<div class="pin${sub?' sub':''}" style="--dc:${c}">${lab}</div>`,iconSize:sub?[22,22]:[30,30],iconAnchor:sub?[11,11]:[15,15]});
   const m=L.marker([l.lat,l.lon],{icon:ic,zIndexOffset:sub?0:100}).addTo(lmap)
-   .bindPopup(`<b>${lab?lab+'　':''}${l.name}</b><br><span style="color:#5b6168;font-size:13px">${l.t}ごろ・${l.address}</span><br><a class="btn" style="margin-top:6px" href="${D('',l.lat+','+l.lon)}" target="_blank" rel="noopener">ここへ車で行く（ナビ）</a>`);
+   .bindPopup(`<b>${lab?lab+'　':''}${l.name}</b><br><span style="color:#5b6168;font-size:13px">${l.t}ごろ・${l.address}</span><br><a class="btn" style="margin-top:6px" href="${D('',l.q)}" target="_blank" rel="noopener">ここへ車で行く（マップ）</a>`);
   lmk.push(m);
  });
  lmap.fitBounds(L.latLngBounds(pts),{padding:[28,28]});
